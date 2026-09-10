@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { NavBar } from "./components/navbar"
 import { Home } from "./pages/home"
+import { MovieDetail } from "./components/movieDetail"
+import { MoviePlay } from "./components/moviePlay"
 
 function App() {
 
@@ -11,6 +13,8 @@ function App() {
         <div className="h-full">
           <Routes>
             <Route path='/' element={<Home/>} />
+            <Route path='/movie/:id' element={<MovieDetail />} />
+            <Route path='/movie/play/:id' element={<MoviePlay />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -1,8 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 export function MovieCard({ movie }) {
-    const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    const navigate = useNavigate();
+    const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
     return (
         <div
             className="relative min-w-[100px] h-[200px] cursor-pointer group rounded-md overflow-hidden flex-shrink-0 snap-start"
+            onClick={() => navigate(`/movie/${movie.id}`)}
         >
             <img
                 src={posterUrl}
