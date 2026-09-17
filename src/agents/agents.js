@@ -13,7 +13,6 @@ import { createAgent, HumanMessage } from "langchain";
 
 const llm = new ChatGroq({
     model: "openai/gpt-oss-120b",
-    apiKey: "api-key",
     temperature: 0,
     maxTokens: undefined,
     maxRetries: 2,
