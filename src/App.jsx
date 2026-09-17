@@ -3,6 +3,7 @@ import { NavBar } from "./components/navbar"
 import { Home } from "./pages/home"
 import { MovieDetail } from "./components/movieDetail"
 import { MoviePlay } from "./components/moviePlay"
+import { AiPreview } from "./components/AIPreview"
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
             <Route path='/' element={<Home/>} />
             <Route path='/movie/:id' element={<MovieDetail />} />
             <Route path='/movie/play/:id' element={<MoviePlay />} />
+            <Route path='/ai-preview' element={<AiPreview />} />
           </Routes>
         </div>
       </BrowserRouter>
