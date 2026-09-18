@@ -18,6 +18,10 @@ export function AiPreview() {
 
             const response = await shoppingCartAgent.invoke({
                 messages: [prompt],
+            }, {
+                configurable: {
+                    "thread_id": "user_2",
+                }
             });
             setResponse(response.messages.at(-1).content);
         } catch (error) {

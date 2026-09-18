@@ -1,23 +1,67 @@
-// import { ChatOllama } from "@langchain/ollama";
-
-// const llm = new ChatOllama({
-//     model: "qwen3:1.7b",
-//     temperature: 0.7,
-//     baseUrl: "http://localhost:11434",
-// });
-
-
+import { ChatOllama } from "@langchain/ollama";
 import { searchProductTool } from "./tools.js";
 import { ChatGroq } from "@langchain/groq"
+import { MemorySaver } from "@langchain/langgraph";
 import { createAgent, HumanMessage } from "langchain";
+import { MultiServerMCPClient } from "@langchain/mcp-adapters";
 
-const llm = new ChatGroq({
-    model: "openai/gpt-oss-120b",
-    temperature: 0,
-    maxTokens: undefined,
-    maxRetries: 2,
-    // other params...
-})
+const llm = new ChatOllama({
+    model: "qwen3:1.7b",
+    temperature: 0.7,
+    baseUrl: "http://localhost:11434",
+});
+
+
+
+const checkPointer =  new MemorySaver();
+
+const client = new MultiServerMCPClient({
+    "weather": {
+      "command": "npx",
+      "args": ["-y", "@dangahagan/weather-mcp@latest"]
+    },
+    "tavily": {
+        "transport": "http",
+        "url": "https://mcp.tavily.com/mcp/?tavilyApiKey=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",
+    }
+});
+
+export const weatherAgent = async () => {
+    const tools  = await client.getTools();
+    // console.log("Available tools:", tools.map(tool => tool.name));
+    return createAgent({
+        model: llm,
+        // checkPointer: checkPointer,
+        systemPrompt: `
+            You are a weather specialist.
+            Use the available weather tools to answer weather-related questions.
+      `,
+      tools: tools,
+    })
+}
+
+// weatherAgent();
+
+const interactWithWeatherAgent = async () => { 
+    const agent = await weatherAgent();
+
+    const prompt = new HumanMessage("What is the weather in Kathmandu City today?");
+    const response = await agent.invoke({
+        messages: [prompt],
+    });
+
+    console.log(response.messages.at(-1).content);
+}
+
+interactWithWeatherAgent();
+
+// const llm = new ChatGroq({
+//     model: "openai/gpt-oss-120b",
+//     temperature: 0,
+//     maxTokens: undefined,
+//     maxRetries: 2,
+//     // other params...
+// })
 
 
 // async function run() {
@@ -36,6 +80,7 @@ const llm = new ChatGroq({
     export const shoppingCartAgent = createAgent({
         model: llm,
         tools: [searchProductTool],
+        checkPointer: checkPointer,
         // systemPrompt: `You are a helpful shopping assistant. You can help users find products, compare prices, and provide recommendations based on their preference
 
         // #RGTCO
